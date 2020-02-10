@@ -9,9 +9,12 @@ describe ApplicationController do
     get '/'
     expect(last_response.status).to eq(302)
   end
+end
 
-  it "displays a welcome message" do
+describe ProducersController do
+  it 'displays a title' do
     get '/producers'
-    expect(last_response.body).to include("Food Hub")
+    expect(last_response.status).to eq(200)
+    expect(last_response.body).to include('Food Hub')
   end
 end
