@@ -15,6 +15,7 @@ Signup
 ___
 Takes name, email and password
 Name and email should be unique
+Displays error message if not unique
 
 Login
 ___
@@ -25,3 +26,15 @@ ___
 Item page should be an edit page (?)
 Should show count, price, description
 Should include submit button and delete button
+
+
+Producers model
+___
+Name, password_digest, email
+Name and email must be unique
+Has many items
+
+Items model
+___
+Name, count, price
+Belongs to producer
