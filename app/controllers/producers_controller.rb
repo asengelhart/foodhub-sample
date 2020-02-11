@@ -1,13 +1,18 @@
 require './config/environment'
 
-class ProducersController < Sinatra::Base
-
-  configure do
-    set :public_folder, 'public'
-    set :views, 'app/views/producers'
-  end
+class ProducersController < ApplicationController
 
   get '/producers' do
-    erb :index
+    erb :'producers/index'
+  end
+
+  get '/producers/signup' do
+    erb :'producers/signup'
+  end
+
+  helpers do
+    def current_user
+      Producer.find_by(id: session[:id])
+    end
   end
 end
