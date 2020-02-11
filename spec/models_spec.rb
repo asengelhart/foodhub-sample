@@ -36,6 +36,11 @@ describe 'Item' do
     @item.price_in_cents = 50
     expect(@item.price).to eq('$.50')
   end
+
+  it 'correctly outputs prices with single digit amounts' do
+    @item.price_in_cents = 5
+    expect(@item.price).to eq('$.05')
+  end
 end
 
 describe 'Producer-Item Associations' do

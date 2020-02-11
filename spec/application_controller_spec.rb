@@ -14,19 +14,17 @@ end
 describe ProducersController do
   context "user is not logged in" do
     describe 'get /producers' do
-      before do
-        get '/producers'
-        @response = last_response
-      end
 
       it 'displays a title' do
-        expect(@response.status).to eq(200)
-        expect(@response.body).to include('Food Hub')
+        visit '/producers'
+        expect(page.status_code).to eq(200)
+        expect(page.body).to include('Food Hub')
       end
 
       it 'has links for logging in and signing up' do
-        expect(@response.body).to include('Log In')
-        expect(@response.body).to include('Sign Up')
+        visit '/producers'
+        expect(page.body).to include('Log In')
+        expect(page.body).to include('Sign Up')
       end
     end
 
