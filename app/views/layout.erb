@@ -15,7 +15,14 @@
   </head>
   <body>
     <div class="wrapper">
-
+      <nav>
+        <% if current_user %>
+          <a href="/logout">Logout</a>
+        <% else %>
+          <a href="/producers/login">Login</a>
+          <a href="/producers/signup">Sign Up</a>
+        <% end %>
+      </nav>
         <%= yield %>
 
       <footer class="branding">
