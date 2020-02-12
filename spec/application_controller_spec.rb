@@ -30,13 +30,56 @@ describe ProducersController do
 
     describe 'get /signup' do
       it 'displays a signup form' do
-        visit '/signup'
+        visit '/producers/signup'
         expect(page).to have_selector('form')
-        expect(page).to have_field(:name)
-        expect(page).to have_field(:email)
-        expect(page).to have_field(:password)
+        expect(page).to have_field(:'producer[name]')
+        expect(page).to have_field(:'producer[email]')
+        expect(page).to have_field(:'producer[password]')
+        expect(page).to have_button("Submit")
+      end
+
+      it 'creates a new user on signup' do
+        visit '/producers/signup'
+        fill_in :'producer[name]', :with => "Johnny McTestface"
+        fill_in :'producer[email]', :with => "johnny@testejo.com"
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(User.find_by(name: "Johnny McTestface")).to be_truthy
+        expect(User.find_by(email: "johnny@testejo.com")).to be_truthy
+      end
+
+      it 'does not allow duplicate names or email addresses' do
+        visit '/producers/signup'
+        fill_in :'producer[name]', :with => "Johnny McTestface"
+        fill_in :'producer[email]', :with => "johnny2@testejo.com"
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(last_response.body).to match(/not available/i)
+
+        visit '/producers/signup'
+        fill_in :'producer[name]', :with => "Johnny McTestface Jr."
+        fill_in :'producer[email]', :with => "johnny@testejo.com"
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(last_response.body).to match(/not available/i)
+      end
+    end
+
+    describe 'get /login' do
+      it 'displays a login form' do
+        visit '/producers/login'
+        expect(page).to have_selector('form')
+        expect(page).to have_field(:'producer[email]')
+        expect(page).to have_field(:'producer[password]')
+      end
+
+      it 'logs in the user on submit' do
+        visit '/producers/login'
+        fill_in :'producer[email]', :with => "johnny@testejo.com"
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(current_user).to eq(User.find_by(email: "johnny@testejo.com"))
       end
     end
   end
-  
 end
