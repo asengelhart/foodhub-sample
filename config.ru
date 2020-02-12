@@ -1,6 +1,6 @@
 require './config/environment'
 
-if ActiveRecord::Migrator.needs_migration?
+if ActiveRecord::Migration.check_pending!
   raise 'Migrations are pending. Run `rake db:migrate` to resolve the issue.'
 end
 
