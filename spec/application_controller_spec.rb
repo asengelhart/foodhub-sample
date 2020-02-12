@@ -44,8 +44,8 @@ describe ProducersController do
         fill_in :'producer[email]', :with => "johnny@testejo.com"
         fill_in :'producer[password]', :with => "Password"
         click_button "Submit"
-        expect(User.find_by(name: "Johnny McTestface")).to be_truthy
-        expect(User.find_by(email: "johnny@testejo.com")).to be_truthy
+        expect(Producer.find_by(name: "Johnny McTestface")).to be_truthy
+        expect(Producer.find_by(email: "johnny@testejo.com")).to be_truthy
       end
 
       it 'does not allow duplicate names or email addresses' do
