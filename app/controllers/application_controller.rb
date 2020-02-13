@@ -12,4 +12,12 @@ class ApplicationController < Sinatra::Base
   get "/" do
     redirect '/producers'
   end
+
+  helpers do
+    def pop_session_errors
+      e = session[:errors]
+      session[:errors] = nil
+      e
+    end
+  end
 end
