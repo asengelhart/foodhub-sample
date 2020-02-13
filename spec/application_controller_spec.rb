@@ -28,7 +28,7 @@ describe ProducersController do
       end
     end
 
-    describe 'get /signup' do
+    describe 'get /producers/signup' do
       it 'displays a signup form' do
         visit '/producers/signup'
         expect(page).to have_selector('form')
@@ -49,19 +49,22 @@ describe ProducersController do
       end
 
       it 'does not allow duplicate names or email addresses' do
+        if Producer.find_by(name: "Johnny McTestface").nil?
+          Producer.create(name: "Johnny McTestface", email: "johnny@testejo.com", password: "Password")
+        end
         visit '/producers/signup'
         fill_in :'producer[name]', :with => "Johnny McTestface"
         fill_in :'producer[email]', :with => "johnny2@testejo.com"
         fill_in :'producer[password]', :with => "Password"
         click_button "Submit"
-        expect(last_response.body).to match(/not available/i)
+        expect(page.body).to match(/already been taken/i)
 
         visit '/producers/signup'
         fill_in :'producer[name]', :with => "Johnny McTestface Jr."
         fill_in :'producer[email]', :with => "johnny@testejo.com"
         fill_in :'producer[password]', :with => "Password"
         click_button "Submit"
-        expect(last_response.body).to match(/not available/i)
+        expect(page.body).to match(/already been taken/i)
       end
     end
 
