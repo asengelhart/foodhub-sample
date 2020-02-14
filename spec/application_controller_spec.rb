@@ -1,8 +1,8 @@
 require_relative "spec_helper"
-
-def app
-  ApplicationController
-end
+require 'pry'
+# def app
+#   ApplicationController
+# end
 
 describe ApplicationController do
   it "redirects to the producers index" do
@@ -52,6 +52,7 @@ describe ProducersController do
         if Producer.find_by(name: "Johnny McTestface").nil?
           Producer.create(name: "Johnny McTestface", email: "johnny@testejo.com", password: "Password")
         end
+        
         visit '/producers/signup'
         fill_in :'producer[name]', :with => "Johnny McTestface"
         fill_in :'producer[email]', :with => "johnny2@testejo.com"
@@ -77,12 +78,39 @@ describe ProducersController do
       end
 
       it 'logs in the user on submit' do
+        if Producer.find_by(name: "Johnny McTestface").nil?
+          Producer.create(name: "Johnny McTestface", email: "johnny@testejo.com", password: "Password")
+        end
         visit '/producers/login'
         fill_in :'producer[email]', :with => "johnny@testejo.com"
         fill_in :'producer[password]', :with => "Password"
         click_button "Submit"
-        expect(current_user).to eq(User.find_by(email: "johnny@testejo.com"))
+        expect(page.body).to include("Johnny McTestface")
       end
+    end
+  end
+
+  context "user is logged in" do
+    before(:each) do
+      @producer = Producer.create(name: "Johnny McTestface", email: "johnny@testejo.com", password: "Password")
+      @item1 = Item.create(name: "Tomato Hash", count: 2, price_in_cents: 200, producer_id: @producer.id)
+      @item2 = Item.create(name: "Potato Browns", count: 4, price_in_cents: 500, producer_id: @producer.id)
+    end
+    def sign_me_in
+      visit '/producers/login'
+      fill_in :'producer[email]', :with => "johnny@testejo.com"
+      fill_in :'producer[password]', :with => "Password"
+      click_button "Submit"
+    end
+
+    it 'displays username and items' do
+      visit '/producers/login'
+      fill_in :'producer[email]', :with => @producer.email
+      fill_in :'producer[password]', :with => "Password"
+      click_button "Submit"
+      expect(page.body).to include(@producer.name)
+      expect(page.body).to include(@item1.name)
+      expect(page.body).to include(@item2.name)
     end
   end
 end
