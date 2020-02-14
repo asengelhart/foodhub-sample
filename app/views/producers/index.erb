@@ -1,3 +1,20 @@
 <h1>Food Hub Producers</h1>
-
-<!-- list of items --> 
+<% if current_user %>
+<p><%= current_user.name %></p>
+<table>
+  <tr>
+    <th>Item Name</th>
+    <th>Price</th>
+    <th>Inventory Count</th>
+    <th>Edit Link</th>
+  </tr>
+  <% current_user.items.each do |item| %>
+    <tr>
+      <td><%= item.name %></td>
+      <td><%= item.price %></td>
+      <td><%= item.count %></td>
+      <td><a href="/producers/item/<%= item.id %>/edit">Edit</a></td>
+    </tr>
+  <% end %>
+</table>
+<% end %>
