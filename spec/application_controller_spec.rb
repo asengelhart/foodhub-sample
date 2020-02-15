@@ -136,11 +136,7 @@ describe ProducersController do
     
     describe 'get /producers/items/new' do
       it 'has a form for making a new item' do
-        visit '/producers/login'
-        fill_in :'producer[email]', :with => @producer.email
-        fill_in :'producer[password]', :with => "Password"
-        click_button "Submit"
-
+        sign_me_in
         visit '/producers/item/new'
         expect(page).to have_field(:'item[name]')
         expect(page).to have_field(:'item[price]')
@@ -148,6 +144,7 @@ describe ProducersController do
       end
 
       it 'creates a new item on submission' do
+        sign_me_in
         visit '/producers/item/new'
         fill_in :'item[name]', :with => "Bean Soup Mix Jar"
         fill_in :'item[price]', :with => "3.00"

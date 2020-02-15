@@ -13,7 +13,17 @@ class ApplicationController < Sinatra::Base
     redirect '/producers'
   end
 
+  get '/logout' do
+    session.clear
+    redirect '/'
+  end
+
   helpers do
+    def add_session_error(message)
+      session[:errors] = [] if session[:errors].nil?
+      session[:errors] << message
+    end
+    
     def pop_session_errors
       e = session[:errors]
       session[:errors] = nil
