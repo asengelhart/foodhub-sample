@@ -1,0 +1,23 @@
+<% if @item %>
+<h2>Edit <%= @item.name %></h2>
+<% else %>
+<h2>Create New Item</h2>
+<% end %>
+<form action="<%= @item ? "/producers/item/#{@item.id}/edit" : "/producers/item/new" %>" method="post">
+  <% if @item %>
+  <input type="hidden" name="_method" value="PATCH">
+  <% end %>
+  <label for="item[name]">Item Name: </label>
+  <input type="text" name="item[name]" id="item[name]" value="<%= @item.name if @item %>">
+  <label for="item[price]">Unit Price: </label>
+  <input type="number" name="item[price]" id="item[price]" min="0" step="0.01" value="<%= @item ? @item.price : '0.00' %>">
+  <label for="item[count]">Inventory Count: </label>
+  <input type="number" name="item[count]" id="item[count]">
+  <input type="submit" value="Submit">
+</form>
+<% if @item %>
+  <form action="<%= "/item/#{@item.id}/edit" %>" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="Delete Item">
+  </form>
+<% end %>

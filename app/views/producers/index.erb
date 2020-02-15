@@ -13,8 +13,15 @@
       <td><%= item.name %></td>
       <td><%= item.price %></td>
       <td><%= item.count %></td>
-      <td><a href="/producers/item/<%= item.id %>/edit">Edit</a></td>
+      <td>
+        <form action="/producers/item/<%= item.id %>/edit" method="get">
+          <input type="submit" value="Edit">
+        </form>
+      </td>
     </tr>
   <% end %>
 </table>
+<form action="producers/item/new" method="get">
+  <input type="submit" value="Create New Item">
+</form>
 <% end %>
