@@ -103,14 +103,60 @@ describe ProducersController do
       click_button "Submit"
     end
 
-    it 'displays username and items' do
-      visit '/producers/login'
-      fill_in :'producer[email]', :with => @producer.email
-      fill_in :'producer[password]', :with => "Password"
-      click_button "Submit"
-      expect(page.body).to include(@producer.name)
-      expect(page.body).to include(@item1.name)
-      expect(page.body).to include(@item2.name)
+    describe 'get /producers' do
+      it 'displays username and items' do
+        visit '/producers/login'
+        fill_in :'producer[email]', :with => @producer.email
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(page.body).to include(@producer.name)
+        expect(page.body).to include(@item1.name)
+        expect(page.body).to include(@item2.name)
+        expect(page).to have_button("Create New Item")
+      end
+
+      it 'correctly displays item prices' do
+        visit '/producers/login'
+        fill_in :'producer[email]', :with => @producer.email
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+        expect(page.body).to include("$2.00")
+        expect(page.body).to include("$5.00")
+      end
+    end
+
+    describe 'get /logout' do
+      it 'logs the user out' do
+        post '/producers/login', :'producer[email]' => @producer.email, :'producer[password]' => "Password"
+        expect(session[:id]).to eq(@producer.id)
+        get '/logout'
+        expect(session[:id]).to be_nil
+      end
+    end
+    
+    describe 'get /producers/items/new' do
+      it 'has a form for making a new item' do
+        visit '/producers/login'
+        fill_in :'producer[email]', :with => @producer.email
+        fill_in :'producer[password]', :with => "Password"
+        click_button "Submit"
+
+        visit '/producers/item/new'
+        expect(page).to have_field(:'item[name]')
+        expect(page).to have_field(:'item[price]')
+        expect(page).to have_field(:'item[count]')
+      end
+
+      it 'creates a new item on submission' do
+        visit '/producers/item/new'
+        fill_in :'item[name]', :with => "Bean Soup Mix Jar"
+        fill_in :'item[price]', :with => "3.00"
+        fill_in :'item[count]', :with => "11"
+        click_button "Submit"
+        expect(Item.find_by(name: "Bean Soup Mix Jar")).to be_truthy
+        expect(Item.find_by(name: "Bean Soup Mix Jar").price_in_cents).to eq(300)
+        expect(Item.find_by(name: "Bean Soup Mix Jar").count).to eq(11)
+      end
     end
   end
 end
