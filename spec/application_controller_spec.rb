@@ -96,6 +96,16 @@ describe ProducersController do
         expect(page.current_url).to include("login")
       end
     end
+
+    describe 'get /producers/item/:id/edit' do
+      it 'redirects to login screen' do
+        producer = Producer.create(name: "Johnny McTestface", email: "johnny@testejo.com", password: "Password")
+        item = Item.create(name: "Test", count: 1, price_in_cents: 100, producer_id: producer.id)
+        visit "/producers/item/#{item.id}/edit"
+        expect(page.body).to include("Must be logged in to perform this action.")
+        expect(page.current_url).to include("login")
+      end
+    end
   end
 
   context "user is logged in" do
@@ -161,6 +171,41 @@ describe ProducersController do
         expect(Item.find_by(name: "Bean Soup Mix Jar")).to be_truthy
         expect(Item.find_by(name: "Bean Soup Mix Jar").price_in_cents).to eq(300)
         expect(Item.find_by(name: "Bean Soup Mix Jar").count).to eq(11)
+      end
+    end
+
+    describe 'get /producers/item/:id/edit' do
+      it 'has a form for editing an item' do
+        sign_me_in
+        visit "/producers/item/#{@item1.id}/edit"
+        expect(page.find_by_id('base_form')[:action]).to eq("/producers/item/#{@item1.id}/edit")
+        expect(page.find_by_id('base_form')).to have_field(type: "hidden", name:"_method")
+        expect(page.find_by_id('delete_button')).to have_field(type: "hidden", name:"_method")
+        expect(page).to have_field(:'item[name]')
+        expect(page).to have_field(:'item[price]')
+        expect(page).to have_field(:'item[count]')
+      end
+
+      it "changes the item's fields upon submit" do
+        sign_me_in
+        visit "/producers/item/#{@item1.id}/edit"
+        fill_in :'item[name]', :with => "Bean Soup Mix Jar"
+        fill_in :'item[price]', :with => "3.00"
+        fill_in :'item[count]', :with => "11"
+        click_button "Submit"
+        persisted_item = Item.find_by(id: @item1.id)
+        expect(persisted_item.name).to eq("Bean Soup Mix Jar")
+        expect(persisted_item.price_in_cents).to eq(300)
+        expect(persisted_item.count).to eq(11)
+      end
+
+      it "prevents users from editing items that aren't theirs" do
+        new_producer = Producer.create(name: "Not Johnny", email: "nj@testejo.com", password: "p")
+        new_item = Item.create(name: "New Thing", count: 1, price_in_cents: 50, producer_id: new_producer.id)
+        sign_me_in
+        visit "/producers/item/#{@new_item.id}/edit"
+        puts page.current_url
+        expect(page.body).to include("Item registered to another producer.")
       end
     end
   end
