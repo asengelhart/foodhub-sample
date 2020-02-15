@@ -88,6 +88,14 @@ describe ProducersController do
         expect(page.body).to include("Johnny McTestface")
       end
     end
+
+    describe 'get /producers/item/new' do
+      it 'redirects to login screen' do
+        visit '/producers/item/new'
+        expect(page.body).to include("Must be logged in to perform this action.")
+        expect(page.current_url).to include("login")
+      end
+    end
   end
 
   context "user is logged in" do
@@ -134,7 +142,7 @@ describe ProducersController do
       end
     end
     
-    describe 'get /producers/items/new' do
+    describe 'get /producers/item/new' do
       it 'has a form for making a new item' do
         sign_me_in
         visit '/producers/item/new'

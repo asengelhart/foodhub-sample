@@ -43,10 +43,12 @@ class ProducersController < ApplicationController
   end
 
   get '/producers/item/new' do
+    check_logged_in
     erb :'producers/items_form'
   end
 
   post '/producers/item/new' do
+    check_logged_in
     item_hash = params[:item]
     name = item_hash[:name]
     count = item_hash[:count].to_i
@@ -64,6 +66,13 @@ class ProducersController < ApplicationController
   helpers do
     def current_user
       @current_user ||= Producer.find_by(id: session[:id])
+    end
+
+    def check_logged_in
+      if current_user.nil?
+        add_session_error("Must be logged in to perform this action.")
+        redirect '/producers/login'
+      end
     end
   end
 end
