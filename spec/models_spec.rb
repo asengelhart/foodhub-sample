@@ -29,17 +29,17 @@ describe 'Item' do
   end
 
   it 'can output price in dollars' do
-    expect(@item.price).to eq('$1.00')
+    expect(@item.price).to eq('1.00')
   end
 
   it 'correctly outputs price less than $1' do
     @item.price_in_cents = 50
-    expect(@item.price).to eq('$.50')
+    expect(@item.price).to eq('.50')
   end
 
   it 'correctly outputs prices with single digit amounts' do
     @item.price_in_cents = 5
-    expect(@item.price).to eq('$.05')
+    expect(@item.price).to eq('.05')
   end
 end
 
