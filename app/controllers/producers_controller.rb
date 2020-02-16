@@ -63,6 +63,39 @@ class ProducersController < ApplicationController
     end
   end
 
+  get '/producers/item/:id/edit' do
+    check_logged_in
+    @item = Item.find_by(id: params[:id])
+    check_item_ownership(@item)
+    erb :'producers/items_form'
+  end
+
+  patch '/producers/item/:id/edit' do
+    check_logged_in
+    @item = Item.find_by(id: params[:id])
+    check_item_ownership(@item)
+    item_hash = params[:item]
+    @item.name = item_hash[:name]
+    @item.count = item_hash[:count].to_i
+    @item.price_in_cents = item_hash[:price].to_f * 100
+    if @item.save
+      redirect '/producers'
+    else
+      @item.errors.to_a.each do |error|
+        add_session_error(error)
+      end
+      erb :'producers/items_form'
+    end
+  end
+
+  delete '/producers/item/:id/edit' do
+    check_logged_in
+    @item = Item.find_by(id: params[:id])
+    check_item_ownership(@item)
+    @item.delete
+    redirect '/producers'
+  end
+
   helpers do
     def current_user
       @current_user ||= Producer.find_by(id: session[:id])
@@ -72,6 +105,17 @@ class ProducersController < ApplicationController
       if current_user.nil?
         add_session_error("Must be logged in to perform this action.")
         redirect '/producers/login'
+      end
+    end
+
+    def check_item_ownership(item)
+      if item.nil?
+        add_session_error("Item does not exist.")
+        redirect '/producers'
+      end
+      if item.producer_id != current_user.id
+        add_session_error("Item registered to another producer.")
+        redirect '/producers'
       end
     end
   end

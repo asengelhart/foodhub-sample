@@ -16,7 +16,7 @@
   <input type="submit" value="Submit">
 </form>
 <% if @item %>
-  <form id="delete_button" action="<%= "/item/#{@item.id}/edit" %>" method="post">
+  <form id="delete_button" action="<%= "/producers/item/#{@item.id}/edit" %>" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <input type="submit" value="Delete Item">
   </form>

@@ -219,8 +219,9 @@ describe ProducersController do
       it "prevents a user from deleting items that aren't theirs" do
         new_producer = Producer.create(name: "Not Johnny", email: "nj@testejo.com", password: "p")
         new_item = Item.create(name: "New Thing", count: 1, price_in_cents: 50, producer_id: new_producer.id)
-        post "/producers/login", email: @producer.email, password: "Password"
+        post "/producers/login", :'producer[email]' => @producer.email, :'producer[password]' => "Password"
         delete "/producers/item/#{new_item.id}/edit"
+        follow_redirect!
         expect(last_response.body).to include("Item registered to another producer.")
       end
     end
