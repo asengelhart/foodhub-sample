@@ -203,9 +203,25 @@ describe ProducersController do
         new_producer = Producer.create(name: "Not Johnny", email: "nj@testejo.com", password: "p")
         new_item = Item.create(name: "New Thing", count: 1, price_in_cents: 50, producer_id: new_producer.id)
         sign_me_in
-        visit "/producers/item/#{@new_item.id}/edit"
-        puts page.current_url
+        visit "/producers/item/#{new_item.id}/edit"
         expect(page.body).to include("Item registered to another producer.")
+      end
+    end
+
+    describe 'delete /producers/item/:id/edit' do
+      it "deletes an item" do
+        sign_me_in
+        visit "/producers/item/#{@item1.id}/edit"
+        click_button "Delete Item"
+        expect(Item.all).not_to include(@item1)
+      end
+
+      it "prevents a user from deleting items that aren't theirs" do
+        new_producer = Producer.create(name: "Not Johnny", email: "nj@testejo.com", password: "p")
+        new_item = Item.create(name: "New Thing", count: 1, price_in_cents: 50, producer_id: new_producer.id)
+        post "/producers/login", email: @producer.email, password: "Password"
+        delete "/producers/item/#{new_item.id}/edit"
+        expect(last_response.body).to include("Item registered to another producer.")
       end
     end
   end
