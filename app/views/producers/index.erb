@@ -11,7 +11,7 @@
   <% current_user.items.each do |item| %>
     <tr>
       <td><%= item.name %></td>
-      <td><%= item.price %></td>
+      <td>$<%= item.price %></td>
       <td><%= item.count %></td>
       <td>
         <form action="/producers/item/<%= item.id %>/edit" method="get">
@@ -21,7 +21,7 @@
     </tr>
   <% end %>
 </table>
-<form action="producers/item/new" method="get">
+<form action="/producers/item/new" method="get">
   <input type="submit" value="Create New Item">
 </form>
 <% end %>

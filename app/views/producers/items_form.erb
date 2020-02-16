@@ -3,7 +3,7 @@
 <% else %>
 <h2>Create New Item</h2>
 <% end %>
-<form action="<%= @item ? "/producers/item/#{@item.id}/edit" : "/producers/item/new" %>" method="post">
+<form id="base_form" action="<%= @item ? "/producers/item/#{@item.id}/edit" : "/producers/item/new" %>" method="post">
   <% if @item %>
   <input type="hidden" name="_method" value="PATCH">
   <% end %>
@@ -16,7 +16,7 @@
   <input type="submit" value="Submit">
 </form>
 <% if @item %>
-  <form action="<%= "/item/#{@item.id}/edit" %>" method="post">
+  <form id="delete_button" action="<%= "/item/#{@item.id}/edit" %>" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <input type="submit" value="Delete Item">
   </form>
