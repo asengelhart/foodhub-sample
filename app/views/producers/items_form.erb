@@ -12,7 +12,7 @@
   <label for="item[price]">Unit Price: </label>
   <input type="number" name="item[price]" id="item[price]" min="0" step="0.01" value="<%= @item ? @item.price : '0.00' %>">
   <label for="item[count]">Inventory Count: </label>
-  <input type="number" name="item[count]" id="item[count]">
+  <input type="number" name="item[count]" id="item[count]" value="<%= @item.count if @item %>">
   <input type="submit" value="Submit">
 </form>
 <% if @item %>
