@@ -38,18 +38,20 @@ GEM
     eventmachine (1.2.7)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
+    launchy (2.5.0)
+      addressable (~> 2.7)
     method_source (0.9.2)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
     minitest (5.14.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.10.8)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.14.3-x86_64-linux)
+      racc (~> 1.4)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (4.0.3)
+    racc (1.6.2)
     rack (2.2.2)
     rack-protection (2.0.8.1)
       rack
@@ -109,13 +111,14 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   activerecord (~> 5.2)
   bcrypt
   capybara
   database_cleaner!
+  launchy
   pry
   rack-test
   rake
